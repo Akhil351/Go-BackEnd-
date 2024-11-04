@@ -29,7 +29,22 @@ func (handler *CartItemHandler) AddItemToCart(w http.ResponseWriter, r *http.Req
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	web.CreateResponse(w, nil, "CartItem Added Succssfully")
+	web.CreateResponse(w, nil, "CartItem Added Successfully")
+}
+func (handler *CartItemHandler) RemoveItemFromCart(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("userId")
+	productIdstr := r.URL.Query().Get("productId")
+	productId, err := strconv.Atoi(productIdstr)
+	if err != nil {
+		web.CreateResponse(w, err, nil)
+		return
+	}
+	err = handler.CartItemRepo.RemoveItemFromCart(userId, uint64(productId))
+	if err != nil {
+		web.CreateResponse(w, err, nil)
+		return
+	}
+	web.CreateResponse(w, nil, "CartItem Removed Successfully")
 }
 
 func (handler *CartItemHandler) GetCartByUserId(w http.ResponseWriter, r *http.Request) {

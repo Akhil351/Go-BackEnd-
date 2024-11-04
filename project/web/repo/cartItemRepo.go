@@ -65,3 +65,31 @@ func (cartItemRepo *CartItemRepo) updateTotalAmount(cartItems []CartItem) float6
 	}
 	return totalAmount
 }
+
+func (cartItemRepo *CartItemRepo) deleteCart(cartItem CartItem) (error){
+	if err:=cartItemRepo.Repo.Delete(&cartItem).Error ; err!=nil{
+		return err
+	}
+	return nil
+}
+func (cartItemRepo *CartItemRepo) RemoveItemFromCart(userId string,productId uint64)(error){
+	cart, err := cartItemRepo.CartRepo.FindCartByUserId(userId)
+	if err != nil {
+		return err
+	}
+	cartItem, err := cartItemRepo.findCartByProductIdAndCartId(cart.Id, productId)
+	if(err!=nil){
+		return err
+	}
+	err=cartItemRepo.deleteCart(cartItem)
+	if(err!=nil){
+		return err
+	}
+	cartItems, _ := cartItemRepo.FindAllCartItemsByCartId(cart.Id)
+	cart.TotalAmount=cartItemRepo.updateTotalAmount(cartItems)
+	err = cartItemRepo.CartRepo.SaveCart(cart)
+	if err != nil {
+		return err
+	}
+	return nil
+}
