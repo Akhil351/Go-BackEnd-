@@ -26,7 +26,7 @@ func CreateResponse(w http.ResponseWriter, err error, data interface{}) {
 
 }
 
-func ProductToProductDto(product Product, categoryRepo CategoryRepo) ProductDto {
+func ProductToProductDto(product Product, categoryRepo *CategoryRepo) ProductDto {
 	var productDto ProductDto
 	productDto.Name = product.Name
 	productDto.Brand = product.Brand
@@ -39,7 +39,7 @@ func ProductToProductDto(product Product, categoryRepo CategoryRepo) ProductDto 
 	return productDto
 }
 
-func ProductRequestToProduct(product Product, productRequest ProductDto, categoryRepo CategoryRepo) Product {
+func ProductRequestToProduct(product Product, productRequest ProductDto, categoryRepo *CategoryRepo) Product {
 
 	if productRequest.Name != "" {
 		product.Name = productRequest.Name

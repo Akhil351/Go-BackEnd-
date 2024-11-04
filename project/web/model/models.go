@@ -20,7 +20,7 @@ type Category struct {
 
 type Cart struct {
 	Id          uint64  `gorm:"primary_key"`
-	TotalAmoout float64 `gorm:"type:decimal(10,2);default:0.00"`
+	TotalAmount float64 `gorm:"type:decimal(10,2);default:0.00"`
 	UserId      string
 }
 

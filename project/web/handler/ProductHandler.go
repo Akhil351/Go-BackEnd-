@@ -17,8 +17,8 @@ type ProductDto = model.ProductDto
 type Product = model.Product
 type Request = model.Request
 type ProductHandler struct {
-	ProductRepo  ProductRepo
-	CategoryRepo CategoryRepo
+	ProductRepo  *ProductRepo
+	CategoryRepo *CategoryRepo
 }
 
 func (handler *ProductHandler) AddProduct(w http.ResponseWriter, r *http.Request) {
