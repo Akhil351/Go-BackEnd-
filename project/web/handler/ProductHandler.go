@@ -4,18 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 	"project/web"
-	"project/web/model"
-	"project/web/repo"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
-type ProductRepo = repo.ProductRepo
-type CategoryRepo = repo.CategoryRepo
-type ProductDto = model.ProductDto
-type Product = model.Product
-type Request = model.Request
 type ProductHandler struct {
 	ProductRepo  *ProductRepo
 	CategoryRepo *CategoryRepo
@@ -39,7 +32,7 @@ func (handler *ProductHandler) AddProduct(w http.ResponseWriter, r *http.Request
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	productRequest.Id = int64(newProduct.Id)
+	productRequest.Id = newProduct.Id
 	web.CreateResponse(w, nil, productRequest)
 
 }
@@ -56,7 +49,9 @@ func (handler *ProductHandler) GetAllProducts(w http.ResponseWriter, r *http.Req
 	}
 	var productsDto []ProductDto
 	for _, product := range products {
-		productsDto = append(productsDto, web.ProductToProductDto(product, handler.CategoryRepo))
+		productDto := web.ConvertToDto(product, ProductDto{})
+		web.CategoryNameToProductDto(&productDto, handler.CategoryRepo, product)
+		productsDto = append(productsDto, productDto)
 	}
 	web.CreateResponse(w, nil, productsDto)
 }
@@ -86,7 +81,9 @@ func (handler *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Requ
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	web.CreateResponse(w, nil, web.ProductToProductDto(updatedProduct, handler.CategoryRepo))
+	productDto := web.ConvertToDto(updatedProduct, ProductDto{})
+	web.CategoryNameToProductDto(&productDto, handler.CategoryRepo, updatedProduct)
+	web.CreateResponse(w, nil, productDto)
 
 }
 

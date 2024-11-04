@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"project/web/model"
 	"strconv"
 
 	"gorm.io/gorm"
@@ -10,7 +9,6 @@ import (
 type ProductRepo struct {
 	Repo *gorm.DB
 }
-type Product = model.Product
 
 func (productRepo *ProductRepo) DeleteProduct(productId uint64) error {
 	product, err := productRepo.FindProductById(productId)

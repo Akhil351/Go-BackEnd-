@@ -1,15 +1,12 @@
 package repo
 
 import (
-	"project/web/model"
-
 	"gorm.io/gorm"
 )
 
 type CategoryRepo struct {
 	Repo *gorm.DB
 }
-type Category = model.Category
 
 func (categoryRepo *CategoryRepo) AddCategory(categoryName string) (Category, error) {
 	existingCategory, err := categoryRepo.FindByCategoryName(categoryName)

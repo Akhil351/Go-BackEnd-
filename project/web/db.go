@@ -19,6 +19,8 @@ type Cart = model.Cart
 type CartItem = model.CartItem
 type Response = model.Response
 type ProductDto = model.ProductDto
+type ProductRepo = repo.ProductRepo
+type CartItemDto = model.CartItemDto
 type CategoryRepo = repo.CategoryRepo
 
 func Init() {

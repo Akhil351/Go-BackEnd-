@@ -1,26 +1,23 @@
 package repo
 
 import (
-	"project/web/model"
-
 	"gorm.io/gorm"
 )
 
-type CartItem = model.CartItem
 type CartItemRepo struct {
 	Repo        *gorm.DB
 	CartRepo    *CartRepo
 	ProductRepo *ProductRepo
 }
 
-func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64, quantity int) (error) {
+func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64, quantity int) error {
 	cart, err := cartItemRepo.CartRepo.FindCartByUserId(userId)
 	if err != nil {
-		return  err
+		return err
 	}
 	product, err := cartItemRepo.ProductRepo.FindProductById(productId)
 	if err != nil {
-		return  err
+		return err
 	}
 	cartItem, err := cartItemRepo.findCartByProductIdAndCartId(cart.Id, productId)
 	if err != nil {
@@ -31,20 +28,20 @@ func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64,
 	} else {
 		cartItem.Quantity = cartItem.Quantity + quantity
 	}
-	cartItem.TotalPrice=cartItem.UnitPrice*float64(cartItem.Quantity)
-    if err:=cartItemRepo.Repo.Save(&cartItem).Error ; err!=nil{
+	cartItem.TotalPrice = cartItem.UnitPrice * float64(cartItem.Quantity)
+	if err := cartItemRepo.Repo.Save(&cartItem).Error; err != nil {
 		return err
 	}
-	cartItems,err:=cartItemRepo.findAllCartItemsByCartId(cart.Id)
-	if(err!=nil){
+	cartItems, err := cartItemRepo.FindAllCartItemsByCartId(cart.Id)
+	if err != nil {
 		return err
 	}
-	cart.TotalAmount=cartItemRepo.updateTotalAmount(cartItems)
-	err=cartItemRepo.CartRepo.SaveCart(cart)
-	if(err!=nil){
+	cart.TotalAmount = cartItemRepo.updateTotalAmount(cartItems)
+	err = cartItemRepo.CartRepo.SaveCart(cart)
+	if err != nil {
 		return err
 	}
-    return nil
+	return nil
 
 }
 func (cartItemRepo *CartItemRepo) findCartByProductIdAndCartId(cartId uint64, productId uint64) (CartItem, error) {
@@ -54,17 +51,17 @@ func (cartItemRepo *CartItemRepo) findCartByProductIdAndCartId(cartId uint64, pr
 	}
 	return cartItem, nil
 }
-func(cartItemRepo *CartItemRepo) findAllCartItemsByCartId(cartId uint64) ([]CartItem,error){
+func (cartItemRepo *CartItemRepo) FindAllCartItemsByCartId(cartId uint64) ([]CartItem, error) {
 	var cartItems []CartItem
-	if err:=cartItemRepo.Repo.Where("cart_id=?",cartId).Find(&cartItems).Error ; err!=nil{
-		return cartItems,err
+	if err := cartItemRepo.Repo.Where("cart_id=?", cartId).Find(&cartItems).Error; err != nil {
+		return cartItems, err
 	}
-	return cartItems,nil
+	return cartItems, nil
 }
-func (cartItemRepo *CartItemRepo) updateTotalAmount(cartItems []CartItem) (float64){
+func (cartItemRepo *CartItemRepo) updateTotalAmount(cartItems []CartItem) float64 {
 	var totalAmount float64
-	for _,cartItem:=range cartItems{
-		totalAmount+=cartItem.TotalPrice
+	for _, cartItem := range cartItems {
+		totalAmount += cartItem.TotalPrice
 	}
 	return totalAmount
 }

@@ -35,6 +35,7 @@ func main() {
 	r.HandleFunc(apiPath+"/product/updateProduct/{id}", productHandler.UpdateProduct).Methods("PUT")
 	r.HandleFunc(apiPath+"/product/deleteProduct/{productId}", productHandler.DeleteProductById).Methods("DELETE")
 	r.HandleFunc(apiPath+"/cartItems/add",CartItemHandler.AddItemToCart).Methods("GET")
+	r.HandleFunc(apiPath+"/cartItems/getCart",CartItemHandler.GetCartByUserId).Methods("GET")
 	http.Handle("/", r)
 	http.ListenAndServe("localhost:8080", r)
 }

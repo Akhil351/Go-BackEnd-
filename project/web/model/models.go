@@ -13,6 +13,16 @@ type Product struct {
 	Description string
 	CategoryId  uint64
 }
+
+type ProductDto struct {
+	Id           uint64   `json:"id"`
+	Name         string  `json:"name"`
+	Brand        string  `json:"brand"`
+	Price        float64 `json:"price"`
+	Inventory    int     `json:"inventory"`
+	Description  string  `json:"description"`
+	CategoryName string  `json:"category_name"`
+}
 type Category struct {
 	Id   uint64 `gorm:"primary_key"`
 	Name string
@@ -24,6 +34,12 @@ type Cart struct {
 	UserId      string
 }
 
+type CartDto struct {
+	Id          uint64    `json:"id"`
+	TotalAmount float64 `json:"total_amount"`
+	UserId      string  `json:"user_id"`
+	CartItems   []CartItemDto `json:"cart_items"`
+}
 type CartItem struct {
 	Id         uint64 `gorm:"primary_key"`
 	Quantity   int
@@ -33,14 +49,12 @@ type CartItem struct {
 	CartId     uint64
 }
 
-type ProductDto struct {
-	Id           int64   `json:"id"`
-	Name         string  `json:"name"`
-	Brand        string  `json:"brand"`
-	Price        float64 `json:"price"`
-	Inventory    int     `json:"inventory"`
-	Description  string  `json:"description"`
-	CategoryName string  `json:"category_name"`
+type CartItemDto struct{
+    Id uint64 `json:"id"`
+	Quantity int `json:"quantity"`
+	UnitPrice float64 `json:"unit_price"`
+	TotalPrice float64 `json:"total_price"`
+	ProductName string `json:"product_name"`
 }
 
 type Response struct {

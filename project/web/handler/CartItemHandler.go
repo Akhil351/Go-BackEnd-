@@ -3,11 +3,9 @@ package handler
 import (
 	"net/http"
 	"project/web"
-	"project/web/repo"
 	"strconv"
 )
 
-type CartItemRepo = repo.CartItemRepo
 type CartItemHandler struct {
 	CartItemRepo *CartItemRepo
 }
@@ -31,5 +29,25 @@ func (handler *CartItemHandler) AddItemToCart(w http.ResponseWriter, r *http.Req
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	web.CreateResponse(w,nil,"CartItem Added Succssfully")
+	web.CreateResponse(w, nil, "CartItem Added Succssfully")
+}
+
+func (handler *CartItemHandler) GetCartByUserId(w http.ResponseWriter, r *http.Request) {
+	userId := r.URL.Query().Get("userId")
+	cart, err := handler.CartItemRepo.CartRepo.FindCartByUserId(userId)
+	if err != nil {
+		web.CreateResponse(w, err, nil)
+		return
+	}
+	cartItems, err := handler.CartItemRepo.FindAllCartItemsByCartId(cart.Id)
+	var cartItemsDto []CartItemDto
+	for _, cartItem := range cartItems {
+		cartItemDto := web.ConvertToDto(cartItem, CartItemDto{})
+		web.ProductNameToCartItemDto(&cartItemDto, handler.CartItemRepo.ProductRepo, cartItem.ProductId)
+		cartItemsDto = append(cartItemsDto, cartItemDto)
+	}
+	cartDto := web.ConvertToDto(cart, CartDto{})
+	cartDto.CartItems = cartItemsDto
+	web.CreateResponse(w, nil, cartDto)
+
 }

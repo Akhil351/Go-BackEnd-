@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/jinzhu/copier"
 )
 
 func CreateResponse(w http.ResponseWriter, err error, data interface{}) {
@@ -26,17 +28,19 @@ func CreateResponse(w http.ResponseWriter, err error, data interface{}) {
 
 }
 
-func ProductToProductDto(product Product, categoryRepo *CategoryRepo) ProductDto {
-	var productDto ProductDto
-	productDto.Name = product.Name
-	productDto.Brand = product.Brand
-	productDto.Description = product.Description
-	productDto.Inventory = int(product.Inventory)
-	productDto.Price = product.Price
-	productDto.Id = int64(product.Id)
+func ConvertToDto[S any,T any](source S,destination T)(T){
+	copier.Copy(&destination,&source)
+	return destination
+}
+
+func CategoryNameToProductDto(productDto *ProductDto,categoryRepo *CategoryRepo,product Product){
 	categoryName, _ := categoryRepo.FindByCategoryId(product.CategoryId)
 	productDto.CategoryName = categoryName
-	return productDto
+}
+
+func ProductNameToCartItemDto(cartItemDto *CartItemDto,productRepo *ProductRepo,productId uint64){
+	product,_:=productRepo.FindProductById(productId)
+	cartItemDto.ProductName=product.Name
 }
 
 func ProductRequestToProduct(product Product, productRequest ProductDto, categoryRepo *CategoryRepo) Product {
