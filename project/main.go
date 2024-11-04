@@ -23,6 +23,7 @@ func main() {
 	r.HandleFunc(apiPath+"/product/addProduct", productHandler.AddProduct).Methods("POST")
 	r.HandleFunc(apiPath+"/product/getAllProducts",productHandler.GetAllProducts).Methods("POST")
 	r.HandleFunc(apiPath+"/product/updateProduct/{id}",productHandler.UpdateProduct).Methods("PUT")
+	r.HandleFunc(apiPath+"/product/deleteProduct/{productId}",productHandler.DeleteProductById).Methods("DELETE")
 	http.Handle("/", r)
 	http.ListenAndServe("localhost:8080", r)
 }

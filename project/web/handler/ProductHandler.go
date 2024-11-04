@@ -89,3 +89,20 @@ func (handler *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Requ
 	web.CreateResponse(w, nil,  web.ProductToProductDto(updatedProduct, handler.CategoryRepo))
 
 }
+
+func (handler *ProductHandler) DeleteProductById(w http.ResponseWriter,r *http.Request){
+	vars:=mux.Vars(r)
+	idStr:=vars["productId"]
+	id,err:=strconv.Atoi(idStr)
+	if(err!=nil){
+		web.CreateResponse(w,err,nil)
+		return
+	}
+	err=handler.ProductRepo.DeleteProduct(uint(id))
+	if(err!=nil){
+		web.CreateResponse(w,err,nil)
+		return
+	}
+	web.CreateResponse(w,nil,"Product Delete Successfully")
+
+}
