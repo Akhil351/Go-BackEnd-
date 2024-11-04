@@ -12,7 +12,7 @@ type ProductRepo struct {
 }
 type Product = model.Product
 
-func (productRepo *ProductRepo) DeleteProduct(productId uint) error {
+func (productRepo *ProductRepo) DeleteProduct(productId uint64) error {
    product,err:=productRepo.FindProductById(productId)
    if(err!=nil){
 	return err
@@ -28,7 +28,7 @@ func (productRepo *ProductRepo) AddProduct(product Product) (Product, error) {
 	}
 	return product, nil
 }
-func (productRepo *ProductRepo) FindProductById(productId uint) (Product, error) {
+func (productRepo *ProductRepo) FindProductById(productId uint64) (Product, error) {
 	var product Product
 	if err := productRepo.Repo.First(&product, productId).Error; err != nil {
 		return product, err
@@ -44,7 +44,7 @@ func (productRepo *ProductRepo) FindAllProducts(searchKey string) ([]Product, er
 		return products1, nil
 	}
 	key := "%" + searchKey + "%"
-	if err := productRepo.Repo.Where("name LIKE ? or brand LIKE ? or description LIKE ? ", key, key, key).Order("id").Find(&products1).Error; err != nil {
+	if err := productRepo.Repo.Where("name ILIKE ? or brand ILIKE ? or description ILIKE ? ", key, key, key).Order("id").Find(&products1).Error; err != nil {
 		return nil, err
 	}
 	var products2 []Product
