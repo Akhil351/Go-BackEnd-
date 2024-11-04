@@ -53,7 +53,7 @@ func ProductRequestToProduct(product Product, productRequest ProductDto, categor
 	if productRequest.Inventory > 0 {
 		product.Inventory = uint(productRequest.Inventory)
 	}
-	if productRequest.Price != 0 {
+	if productRequest.Price > 0 {
 		product.Price = productRequest.Price
 	}
 	if productRequest.CategoryName != "" {
@@ -73,11 +73,11 @@ func ValidateProductRequest(productRequest ProductDto) error {
 	if productRequest.Description == "" {
 		return fmt.Errorf("description  is not provided")
 	}
-	if productRequest.Inventory == 0 {
-		return fmt.Errorf("inventory  is not provided")
+	if productRequest.Inventory <=0 {
+		return fmt.Errorf("inventory  should be greater than zero")
 	}
-	if productRequest.Price == 0 {
-		return fmt.Errorf("price  is not provided")
+	if productRequest.Price <=0 {
+		return fmt.Errorf("price  should be greater than zero")
 	}
 	if productRequest.CategoryName == "" {
 		return fmt.Errorf("categoryName  is not provided")
