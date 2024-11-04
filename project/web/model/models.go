@@ -34,7 +34,7 @@ type CartItem struct {
 }
 
 type ProductDto struct {
-	Id           int64     `json:"id"`
+	Id           int64   `json:"id"`
 	Name         string  `json:"name"`
 	Brand        string  `json:"brand"`
 	Price        float64 `json:"price"`

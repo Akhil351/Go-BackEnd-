@@ -73,10 +73,10 @@ func ValidateProductRequest(productRequest ProductDto) error {
 	if productRequest.Description == "" {
 		return fmt.Errorf("description  is not provided")
 	}
-	if productRequest.Inventory <=0 {
+	if productRequest.Inventory <= 0 {
 		return fmt.Errorf("inventory  should be greater than zero")
 	}
-	if productRequest.Price <=0 {
+	if productRequest.Price <= 0 {
 		return fmt.Errorf("price  should be greater than zero")
 	}
 	if productRequest.CategoryName == "" {

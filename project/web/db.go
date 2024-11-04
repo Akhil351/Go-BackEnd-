@@ -35,6 +35,6 @@ func Init() {
 	}
 	fmt.Println("Connected to the database")
 	Repo = database
-	Repo.AutoMigrate(&Product{}, &Category{},&Cart{},&CartItem{})
+	Repo.AutoMigrate(&Product{}, &Category{}, &Cart{}, &CartItem{})
 
 }

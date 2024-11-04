@@ -17,7 +17,7 @@ func (categoryRepo *CategoryRepo) AddCategory(categoryName string) (Category, er
 		return existingCategory, nil
 	}
 	var category Category
-	category.Name=categoryName
+	category.Name = categoryName
 	err = categoryRepo.Repo.Save(&category).Error
 	if err != nil {
 		return category, err
@@ -33,10 +33,10 @@ func (categoryRepo *CategoryRepo) FindByCategoryName(categoryName string) (Categ
 	return category, nil
 }
 
-func(CategoryRepo *CategoryRepo) FindByCategoryId(categoryId uint64) (string,error){
+func (CategoryRepo *CategoryRepo) FindByCategoryId(categoryId uint64) (string, error) {
 	var category Category
-	if err:=CategoryRepo.Repo.First(&category,categoryId).Error; err!=nil{
-		return "",err
+	if err := CategoryRepo.Repo.First(&category, categoryId).Error; err != nil {
+		return "", err
 	}
-	return category.Name,nil
+	return category.Name, nil
 }

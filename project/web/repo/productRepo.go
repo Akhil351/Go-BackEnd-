@@ -13,14 +13,14 @@ type ProductRepo struct {
 type Product = model.Product
 
 func (productRepo *ProductRepo) DeleteProduct(productId uint64) error {
-   product,err:=productRepo.FindProductById(productId)
-   if(err!=nil){
-	return err
-   }
-   if err:=productRepo.Repo.Delete(&product).Error; err!=nil{
-      return err
-   }
-   return nil
+	product, err := productRepo.FindProductById(productId)
+	if err != nil {
+		return err
+	}
+	if err := productRepo.Repo.Delete(&product).Error; err != nil {
+		return err
+	}
+	return nil
 }
 func (productRepo *ProductRepo) AddProduct(product Product) (Product, error) {
 	if err := productRepo.Repo.Save(&product).Error; err != nil {
