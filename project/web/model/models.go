@@ -1,23 +1,40 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type Product struct {
-	Id          uint `gorm:"primary_key"`
+	Id          uint64 `gorm:"primary_key"`
 	Name        string
 	Brand       string
-	Price       float64
+	Price       float64 `gorm:"type:decimal(10,2);default:0.00"`
 	Inventory   uint
 	Description string
-	CategoryId  uint
+	CategoryId  uint64
 }
 type Category struct {
-	Id   uint `gorm:"primary_key"`
+	Id   uint64 `gorm:"primary_key"`
 	Name string
 }
 
+type Cart struct {
+	Id          uint64  `gorm:"primary_key"`
+	TotalAmoout float64 `gorm:"type:decimal(10,2);default:0.00"`
+	UserId      string
+}
+
+type CartItem struct {
+	Id         uint64 `gorm:"primary_key"`
+	Quantity   int
+	UnitPrice  float64 `gorm:"type:decimal(10,2);default:0.00"`
+	TotalPrice float64 `gorm:"type.decimal(10,2);default:0.00"`
+	ProductId  uint64
+	CartId     uint64
+}
+
 type ProductDto struct {
-	Id           int     `json:"id"`
+	Id           int64     `json:"id"`
 	Name         string  `json:"name"`
 	Brand        string  `json:"brand"`
 	Price        float64 `json:"price"`

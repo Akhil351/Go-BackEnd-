@@ -10,9 +10,9 @@ import (
 func CreateResponse(w http.ResponseWriter, err error, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	status := "Success"
-	errMsg:=""
+	errMsg := ""
 	if err != nil {
-		errMsg=err.Error()
+		errMsg = err.Error()
 		status = "Failed"
 		w.WriteHeader(http.StatusBadRequest)
 	}
@@ -33,14 +33,14 @@ func ProductToProductDto(product Product, categoryRepo CategoryRepo) ProductDto 
 	productDto.Description = product.Description
 	productDto.Inventory = int(product.Inventory)
 	productDto.Price = product.Price
-	productDto.Id = int(product.Id)
+	productDto.Id = int64(product.Id)
 	categoryName, _ := categoryRepo.FindByCategoryId(product.CategoryId)
 	productDto.CategoryName = categoryName
 	return productDto
 }
 
-func ProductRequestToProduct( product Product,productRequest ProductDto, categoryRepo CategoryRepo) (Product) {
-	
+func ProductRequestToProduct(product Product, productRequest ProductDto, categoryRepo CategoryRepo) Product {
+
 	if productRequest.Name != "" {
 		product.Name = productRequest.Name
 	}
@@ -53,7 +53,7 @@ func ProductRequestToProduct( product Product,productRequest ProductDto, categor
 	if productRequest.Inventory > 0 {
 		product.Inventory = uint(productRequest.Inventory)
 	}
-	if productRequest.Price > 0 {
+	if productRequest.Price != 0 {
 		product.Price = productRequest.Price
 	}
 	if productRequest.CategoryName != "" {

@@ -33,7 +33,7 @@ func (categoryRepo *CategoryRepo) FindByCategoryName(categoryName string) (Categ
 	return category, nil
 }
 
-func(CategoryRepo *CategoryRepo) FindByCategoryId(categoryId uint) (string,error){
+func(CategoryRepo *CategoryRepo) FindByCategoryId(categoryId uint64) (string,error){
 	var category Category
 	if err:=CategoryRepo.Repo.First(&category,categoryId).Error; err!=nil{
 		return "",err

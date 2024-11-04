@@ -33,13 +33,13 @@ func (handler *ProductHandler) AddProduct(w http.ResponseWriter, r *http.Request
 		return
 	}
 	var product Product
-	product= web.ProductRequestToProduct(product,productRequest, handler.CategoryRepo)
+	product = web.ProductRequestToProduct(product, productRequest, handler.CategoryRepo)
 	newProduct, err := handler.ProductRepo.AddProduct(product)
 	if err != nil {
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	productRequest.Id = int(newProduct.Id)
+	productRequest.Id = int64(newProduct.Id)
 	web.CreateResponse(w, nil, productRequest)
 
 }
@@ -75,34 +75,34 @@ func (handler *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Requ
 		return
 	}
 	var product Product
-	product, err = handler.ProductRepo.FindProductById(uint(id))
+	product, err = handler.ProductRepo.FindProductById(uint64(id))
 	if err != nil {
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	product= web.ProductRequestToProduct(product, productRequest, handler.CategoryRepo)
+	product = web.ProductRequestToProduct(product, productRequest, handler.CategoryRepo)
 	updatedProduct, err := handler.ProductRepo.AddProduct(product)
 	if err != nil {
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	web.CreateResponse(w, nil,  web.ProductToProductDto(updatedProduct, handler.CategoryRepo))
+	web.CreateResponse(w, nil, web.ProductToProductDto(updatedProduct, handler.CategoryRepo))
 
 }
 
-func (handler *ProductHandler) DeleteProductById(w http.ResponseWriter,r *http.Request){
-	vars:=mux.Vars(r)
-	idStr:=vars["productId"]
-	id,err:=strconv.Atoi(idStr)
-	if(err!=nil){
-		web.CreateResponse(w,err,nil)
+func (handler *ProductHandler) DeleteProductById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idStr := vars["productId"]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		web.CreateResponse(w, err, nil)
 		return
 	}
-	err=handler.ProductRepo.DeleteProduct(uint(id))
-	if(err!=nil){
-		web.CreateResponse(w,err,nil)
+	err = handler.ProductRepo.DeleteProduct(uint64(id))
+	if err != nil {
+		web.CreateResponse(w, err, nil)
 		return
 	}
-	web.CreateResponse(w,nil,"Product Delete Successfully")
+	web.CreateResponse(w, nil, "Product Delete Successfully")
 
 }
