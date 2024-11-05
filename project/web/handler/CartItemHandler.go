@@ -24,7 +24,7 @@ func (handler *CartItemHandler) AddItemToCart(w http.ResponseWriter, r *http.Req
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	err = handler.CartItemRepo.AddItemToCart(userId, uint64(productId), quantity)
+	err = handler.CartItemRepo.AddItemToCart(userId, uint64(productId), quantity,"Add")
 	if err != nil {
 		web.CreateResponse(w, err, nil)
 		return
@@ -80,7 +80,7 @@ func(handler *CartItemHandler) UpdateQuantity(w http.ResponseWriter,r *http.Requ
 		web.CreateResponse(w, err, nil)
 		return
 	}
-	err=handler.CartItemRepo.UpdateCartItem(userId,uint64(productId),quantity)
+	err=handler.CartItemRepo.AddItemToCart(userId,uint64(productId),quantity,"Update")
 	if err != nil {
 		web.CreateResponse(w, err, nil)
 		return

@@ -10,7 +10,7 @@ type CartItemRepo struct {
 	ProductRepo *ProductRepo
 }
 
-func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64, quantity int) error {
+func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64, quantity int, methodName string) error {
 	cart, err := cartItemRepo.CartRepo.FindCartByUserId(userId)
 	if err != nil {
 		return err
@@ -26,17 +26,17 @@ func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64,
 		cartItem.Quantity = quantity
 		cartItem.UnitPrice = product.Price
 	} else {
-		cartItem.Quantity = cartItem.Quantity + quantity
+		if methodName == "Add" {
+			cartItem.Quantity = cartItem.Quantity + quantity
+		} else if methodName == "Update" {
+			cartItem.Quantity = quantity
+		}
 	}
 	cartItem.TotalPrice = cartItem.UnitPrice * float64(cartItem.Quantity)
 	if err := cartItemRepo.Repo.Save(&cartItem).Error; err != nil {
 		return err
 	}
-	cartItems, err := cartItemRepo.FindAllCartItemsByCartId(cart.Id)
-	if err != nil {
-		return err
-	}
-	cart.TotalAmount = cartItemRepo.updateTotalAmount(cartItems)
+	cart.TotalAmount = cartItemRepo.updateTotalAmount(cart.Id)
 	err = cartItemRepo.CartRepo.SaveCart(cart)
 	if err != nil {
 		return err
@@ -58,7 +58,8 @@ func (cartItemRepo *CartItemRepo) FindAllCartItemsByCartId(cartId uint64) ([]Car
 	}
 	return cartItems, nil
 }
-func (cartItemRepo *CartItemRepo) updateTotalAmount(cartItems []CartItem) float64 {
+func (cartItemRepo *CartItemRepo) updateTotalAmount(cartId uint64) float64 {
+	cartItems, _ := cartItemRepo.FindAllCartItemsByCartId(cartId)
 	var totalAmount float64
 	for _, cartItem := range cartItems {
 		totalAmount += cartItem.TotalPrice
@@ -66,53 +67,26 @@ func (cartItemRepo *CartItemRepo) updateTotalAmount(cartItems []CartItem) float6
 	return totalAmount
 }
 
-func (cartItemRepo *CartItemRepo) deleteCart(cartItem CartItem) (error){
-	if err:=cartItemRepo.Repo.Delete(&cartItem).Error ; err!=nil{
+func (cartItemRepo *CartItemRepo) deleteCart(cartItem CartItem) error {
+	if err := cartItemRepo.Repo.Delete(&cartItem).Error; err != nil {
 		return err
 	}
 	return nil
 }
-func (cartItemRepo *CartItemRepo) RemoveItemFromCart(userId string,productId uint64)(error){
+func (cartItemRepo *CartItemRepo) RemoveItemFromCart(userId string, productId uint64) error {
 	cart, err := cartItemRepo.CartRepo.FindCartByUserId(userId)
 	if err != nil {
 		return err
 	}
 	cartItem, err := cartItemRepo.findCartByProductIdAndCartId(cart.Id, productId)
-	if(err!=nil){
-		return err
-	}
-	err=cartItemRepo.deleteCart(cartItem)
-	if(err!=nil){
-		return err
-	}
-	cartItems, _ := cartItemRepo.FindAllCartItemsByCartId(cart.Id)
-	cart.TotalAmount=cartItemRepo.updateTotalAmount(cartItems)
-	err = cartItemRepo.CartRepo.SaveCart(cart)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (cartItemRepo *CartItemRepo) UpdateCartItem(userId string,productId uint64,quantity int)(error){
-	cart, err := cartItemRepo.CartRepo.FindCartByUserId(userId)
+	err = cartItemRepo.deleteCart(cartItem)
 	if err != nil {
 		return err
 	}
-	cartItem, err := cartItemRepo.findCartByProductIdAndCartId(cart.Id, productId)
-	if(err!=nil){
-		return err
-	}
-	cartItem.Quantity=quantity
-	cartItem.TotalPrice=cartItem.UnitPrice*float64(cartItem.Quantity)
-	if err := cartItemRepo.Repo.Save(&cartItem).Error; err != nil {
-		return err
-	}
-	cartItems, err := cartItemRepo.FindAllCartItemsByCartId(cart.Id)
-	if err != nil {
-		return err
-	}
-	cart.TotalAmount = cartItemRepo.updateTotalAmount(cartItems)
+	cart.TotalAmount = cartItemRepo.updateTotalAmount(cart.Id)
 	err = cartItemRepo.CartRepo.SaveCart(cart)
 	if err != nil {
 		return err
