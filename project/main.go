@@ -45,6 +45,7 @@ func main() {
 	r.HandleFunc(apiPath+"/cartItems/getCart", CartItemHandler.GetCartByUserId).Methods("GET")
 	r.HandleFunc(apiPath+"/cartItems/updateCart", CartItemHandler.UpdateQuantity).Methods("PUT")
 	r.HandleFunc(apiPath+"/order/placeOrder",orderHandler.PlaceOrder).Methods("GET")
+	r.HandleFunc(apiPath+"/order/UserOrder",orderHandler.GetOrder).Methods("GET")
 	http.Handle("/", r)
 	http.ListenAndServe("localhost:8080", r)
 }

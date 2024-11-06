@@ -1,6 +1,8 @@
 package repo
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type OrderItemRepo struct {
 	Repo         *gorm.DB
@@ -37,5 +39,13 @@ func (orderItemRepo *OrderItemRepo) CreateOrderItems(orderId uint64, cartId uint
 		return orderItems, err
 	}
 	orderItemRepo.CartItemRepo.DeleteAllCartItem(cartItems)
+	return orderItems, nil
+}
+
+func (orderItemRepo *OrderItemRepo) GetOrderItemsByOrderId(orderId uint64) ([]OrderItem, error) {
+	var orderItems []OrderItem
+	if err := orderItemRepo.Repo.Where("order_id=?", orderId).Find(&orderItems).Error; err != nil {
+		return orderItems, err
+	}
 	return orderItems, nil
 }

@@ -50,4 +50,12 @@ func (orderRepo *OrderRepo) createOrder(cart Cart) (Order, error) {
 	}
 	return order, nil
 
+
+}
+func (orderRepo *OrderRepo) FindOrderByUserId(userId string)([]Order,error){
+	var order []Order
+	if err:=orderRepo.Repo.Where("user_id=?",userId).Find(&order).Error; err!=nil{
+		return order,err
+	}
+	return order,nil
 }
