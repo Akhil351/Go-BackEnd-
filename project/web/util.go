@@ -38,9 +38,14 @@ func CategoryNameToProductDto(productDto *ProductDto,categoryRepo *CategoryRepo,
 	productDto.CategoryName = categoryName
 }
 
-func ProductNameToCartItemDto(cartItemDto *CartItemDto,productRepo *ProductRepo,productId uint64){
+func AssignProductName(cartItemDto *CartItemDto,productRepo *ProductRepo,productId uint64){
 	product,_:=productRepo.FindProductById(productId)
 	cartItemDto.ProductName=product.Name
+}
+
+func AssignProductNameToOrder(orderItemDto *OrderItemDto,productRepo *ProductRepo,productId uint64){
+	product,_:=productRepo.FindProductById(productId)
+	orderItemDto.ProductName=product.Name
 }
 
 func ProductRequestToProduct(product Product, productRequest ProductDto, categoryRepo *CategoryRepo) Product {

@@ -58,7 +58,7 @@ func (handler *CartItemHandler) GetCartByUserId(w http.ResponseWriter, r *http.R
 	var cartItemsDto []CartItemDto
 	for _, cartItem := range cartItems {
 		cartItemDto := web.ConvertToDto(cartItem, CartItemDto{})
-		web.ProductNameToCartItemDto(&cartItemDto, handler.CartItemRepo.ProductRepo, cartItem.ProductId)
+		web.AssignProductName(&cartItemDto, handler.CartItemRepo.ProductRepo, cartItem.ProductId)
 		cartItemsDto = append(cartItemsDto, cartItemDto)
 	}
 	cartDto := web.ConvertToDto(cart, CartDto{})

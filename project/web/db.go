@@ -16,6 +16,9 @@ var Repo *gorm.DB
 type Product = model.Product
 type Category = model.Category
 type Cart = model.Cart
+type Order = model.Order
+type OrderItem = model.OrderItem
+type OrderItemDto=model.OrderItemDto
 type CartItem = model.CartItem
 type Response = model.Response
 type ProductDto = model.ProductDto
@@ -37,6 +40,6 @@ func Init() {
 	}
 	fmt.Println("Connected to the database")
 	Repo = database
-	Repo.AutoMigrate(&Product{}, &Category{}, &Cart{}, &CartItem{})
+	Repo.AutoMigrate(&Product{}, &Category{}, &Cart{}, &CartItem{},&Order{},&OrderItem{})
 
 }

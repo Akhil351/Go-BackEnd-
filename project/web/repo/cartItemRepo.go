@@ -23,13 +23,13 @@ func (cartItemRepo *CartItemRepo) AddItemToCart(userId string, productId uint64,
 	if err != nil {
 		cartItem.CartId = cart.Id
 		cartItem.ProductId = productId
-		cartItem.Quantity = quantity
+		cartItem.Quantity = uint(quantity)
 		cartItem.UnitPrice = product.Price
 	} else {
 		if methodName == "Add" {
-			cartItem.Quantity = cartItem.Quantity + quantity
+			cartItem.Quantity = cartItem.Quantity + uint(quantity)
 		} else if methodName == "Update" {
-			cartItem.Quantity = quantity
+			cartItem.Quantity = uint(quantity)
 		}
 	}
 	cartItem.TotalPrice = cartItem.UnitPrice * float64(cartItem.Quantity)
@@ -89,6 +89,13 @@ func (cartItemRepo *CartItemRepo) RemoveItemFromCart(userId string, productId ui
 	cart.TotalAmount = cartItemRepo.updateTotalAmount(cart.Id)
 	err = cartItemRepo.CartRepo.SaveCart(cart)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cartItemRepo *CartItemRepo) DeleteAllCartItem(cartItems []CartItem) error {
+	if err := cartItemRepo.Repo.Delete(&cartItems).Error; err != nil {
 		return err
 	}
 	return nil
